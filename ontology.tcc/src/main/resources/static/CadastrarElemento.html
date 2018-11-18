@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="theme.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+       $(document).ready(function(){
+
+        $('#btnAdicionar').on('click', function(){
+            var descAdicional = document.getElementById('txtDescricaoAdicional');
+            console.log(descAdicional.value);
+            populateTable('tableDescricoes', descAdicional.value);
+        });
+
+        $('#tipoElemento li').on('click', function() {
+            console.log($(this).text());
+            var tipoSelecionado = $(this).text();
+            $('#btnElementos').text(tipoSelecionado);
+        });
+
+        $('#btnCadastrar').on('click', function(){
+
+            var tipoSelecionado = $('#btnElementos').text();
+            var descOficial = document.getElementById('txtDescOficial');
+            var textoDescOficial = descOficial.value;
+
+            console.log(tipoSelecionado);
+            console.log(textoDescOficial);
+
+            var i = 0;
+            var arrayItem = [];
+
+            $("#tableDescricoes tbody tr").each(function() {
+                console.log(($(this).find("td:last-child").html()));
+
+                arrayItem[i] = $(this).find("td:last-child").html();
+                i++;
+            });
+
+            console.log(arrayItem);
+
+            var text = '{' +
+                '"classeElemento": "' + tipoSelecionado + '",' +
+                '"descricaoOficial": "' + textoDescOficial + '",' +
+                '"resourceCode": "elemento_' + textoDescOficial + '"' +
+            '}';
+
+            console.log(text);
+
+            var obj = JSON.parse(text);
+            obj['descricoesAdicionais']= [];
+
+            for(var i = 0; i < arrayItem.length; i++) {
+                obj['descricoesAdicionais'][i] = arrayItem[i];
+            }
+
+            console.log(obj);
+
+            var dataOrder = JSON.stringify(obj);
+
+            console.log(dataOrder);
+
+            const Url = 'http://localhost:8080/api/v1/elementos';
+
+            $.ajax({
+              url:Url,
+              type:"POST",
+              data: dataOrder,
+              contentType: "application/json",
+              dataType: "json",
+              success:function(result){
+                console.log('ok')
+              },
+              error:function(error){
+                console.log(error)
+              }
+            })
+        })
+
+        function populateTable(nameTable, value) {
+            var table = document.getElementById(nameTable).getElementsByTagName('tbody')[0];
+
+            var newRow   = table.insertRow(table.rows.length);
+            var newCell  = newRow.insertCell(0);
+            var newText  = document.createTextNode(value);
+
+            newCell.appendChild(newText);
+        }
+      })
+    </script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-md bg-primary navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">HelpMEI</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar2SupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-center justify-content-end" id="navbar2SupportedContent">
+            <a class="btn navbar-btn btn-primary ml-2 text-white">
+                <i class="fa d-inline fa-lg fa-user-circle-o"></i> Sign in</a>
+        </div>
+    </div>
+</nav>
+<div class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3> Cadastro de elemento<br><br>
+                </h3>
+                <div>
+                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btnElementos">Tipo de Elemento</button>
+                    <ul class="dropdown-menu" id = "tipoElemento">
+                        <li class="dropdown-item">Local</li>
+                        <li class="dropdown-item">Produto</li>
+                        <li class="dropdown-item">Serviço</li>
+                        <li class="dropdown-item">Ocupação</li>
+                    </ul>
+                    <br><br>
+                </div>
+                <div class="form-group">
+                    <label>Descrição oficial:</label>
+                    <input type="text" class="form-control" id="txtDescOficial">
+                </div>
+                <label>Descrição adicional:</label>
+                <input type="text" class="form-control" id="txtDescricaoAdicional">
+                <div class="btn-group my-1 justify-content-end w-100">
+                    <button type="button" class="btn btn-primary" id="btnAdicionar">Adicionar</button>
+                </div>
+            </div>
+        </div>
+        <table class="table" id="tableDescricoes">
+            <thead>
+            <tr>
+                <th>Descrições adicionais:</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="btn-group my-1 justify-content-end w-100" >
+            <button type="submit" class="btn btn-primary mx-2" id="btnCadastrar">Cadastrar</button>
+        </div>
+    </div>
+</div>
+</body>
