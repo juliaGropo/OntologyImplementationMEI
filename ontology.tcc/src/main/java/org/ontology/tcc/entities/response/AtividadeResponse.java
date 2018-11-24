@@ -1,32 +1,51 @@
 package org.ontology.tcc.entities.response;
 
-import org.ontology.tcc.entities.impl.DefaultAtividade;
-import org.protege.owl.codegeneration.inference.CodeGenerationInference;
-import org.semanticweb.owlapi.model.IRI;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Optional;
 
 public class AtividadeResponse {
 
+    @JsonProperty("codigoCNAE")
     private String codigoCNAE;
+
+    @JsonProperty("resourceAtividade")
+    private String resourceAtividade;
+
+    @JsonProperty("classeAtividade")
+    private String classeAtividade;
+
+    @JsonProperty("descricao")
     private String descricao;
 
-    /*private List<String> locais;
+    @JsonProperty("locais")
+    private List<String> locais;
 
+    @JsonProperty("produtos")
     private List<String> produtos;
 
+    @JsonProperty("servicos")
     private List<String> servicos;
 
+    @JsonProperty("ocupacoes")
     private List<String> ocupacoes;
 
+    @JsonProperty("locaisExc")
     private List<String> locaisExc;
 
+    @JsonProperty("produtosExc")
     private List<String> produtosExc;
 
+    @JsonProperty("servicosExc")
     private List<String> servicosExc;
 
-    private List<String> ocupacoesExc;*/
+    @JsonProperty("ocupacoesExc")
+    private List<String> ocupacoesExc;
+
+    public AtividadeResponse() {
+
+    }
 
     public AtividadeResponse(Optional<String> descricao, Optional<String> cnae) {
         this.descricao = descricao.isPresent() ? descricao.get() : null;
@@ -49,7 +68,15 @@ public class AtividadeResponse {
         this.codigoCNAE = codigoCNAE;
     }
 
-    /*public List<String> getLocais() {
+    public String getResourceAtividade() {
+        return resourceAtividade;
+    }
+
+    public void setResourceAtividade(String resourceAtividade) {
+        this.resourceAtividade = resourceAtividade;
+    }
+
+    public List<String> getLocais() {
         return locais;
     }
 
@@ -111,5 +138,13 @@ public class AtividadeResponse {
 
     public void setOcupacoesExc(List<String> ocupacoesExc) {
         this.ocupacoesExc = ocupacoesExc;
-    }*/
+    }
+
+    public String getClasseAtividade() {
+        return classeAtividade;
+    }
+
+    public void setClasseAtividade(String classeAtividade) {
+        this.classeAtividade = classeAtividade;
+    }
 }

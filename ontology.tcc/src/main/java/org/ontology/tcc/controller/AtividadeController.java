@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +41,19 @@ public class AtividadeController {
         return new ResponseEntity(list, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public HttpStatus cadastrarElemento(@RequestBody AtividadeResponse atividade) throws FileNotFoundException {
+
+        OntModel ontology = ontologyService.carregaOntologia();
+
+        atividadeService.cadastrarAtividade(atividade, ontology);
+
+        return HttpStatus.OK;
+    }
+
     @RequestMapping(value = "/{termo}", method = RequestMethod.GET)
-    public Response consultarAtividadesPorTermo(@PathVariable String termo) throws IOException {
+    public ResponseEntity<InformacaoAtividadeResponse> consultarAtividadesPorTermo(@PathVariable String termo) throws IOException {
 
         termo = termo != null ? termo.toLowerCase() : "";
 
@@ -49,6 +61,7 @@ public class AtividadeController {
 
         InformacaoAtividadeResponse atividadeResponse = atividadeService.listAtividadesByTermos(Arrays.asList(termo.split(" ")), ontology);
 
-        return Response.ok(atividadeService.listAtividadesByTermos(Arrays.asList(termo.split(" ")), ontology)).build();
+        return new ResponseEntity(atividadeResponse, HttpStatus.OK);
     }
+
 }

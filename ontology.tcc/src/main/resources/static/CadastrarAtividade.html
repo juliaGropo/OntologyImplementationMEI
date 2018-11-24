@@ -102,6 +102,238 @@
               }
             })
 
+        $('#btnCadastrar').on('click', function(){
+
+            var txtCodAtividade = document.getElementById('codAtividade');
+            var txtDescAtividade = document.getElementById('descAtividade');
+            var txtClasseAtividade = document.getElementById('classeAtividade');
+
+            var valueCodAtividade = txtCodAtividade.value;
+            var valueDescAtividade = txtDescAtividade.value;
+            var valueClasseAtividade = txtClasseAtividade.value;
+
+            console.log(valueCodAtividade);
+            console.log(valueDescAtividade);
+            console.log(valueClasseAtividade);
+
+            var i = 0;
+            var arrayLocal = [];
+            var arrayLocalExc = [];
+
+            var tableLocais = document.getElementById( "tblLocais" );
+            for ( var i = 1; i < tableLocais.rows.length; i++ ) {
+                if(tableLocais.rows[i].cells[0].innerHTML != " ") {
+                    arrayLocal[i - 1] = tableLocais.rows[i].cells[0].innerHTML;
+                }
+
+                if(tableLocais.rows[i].cells[1].innerHTML != " ") {
+                    arrayLocalExc[i - 1] = tableLocais.rows[i].cells[1].innerHTML;
+                }
+            }
+
+            console.log(arrayLocal);
+            console.log(arrayLocalExc);
+
+            var arrayProduto = [];
+            var arrayProdutoExc = [];
+
+            var tableProdutos = document.getElementById( "tblProdutos" );
+            for ( var i = 1; i < tableProdutos.rows.length; i++ ) {
+                if(tableProdutos.rows[i].cells[0].innerHTML != " ") {
+                    arrayProduto[i - 1] = tableProdutos.rows[i].cells[0].innerHTML;
+                }
+
+                if(tableProdutos.rows[i].cells[1].innerHTML != " ") {
+                    arrayProdutoExc[i - 1] = tableProdutos.rows[i].cells[1].innerHTML;
+                }
+            }
+
+            console.log(arrayProduto);
+            console.log(arrayProdutoExc);
+
+            var arrayServico = [];
+            var arrayServicoExc = [];
+
+            var tableServicos = document.getElementById( "tblServicos" );
+            for ( var i = 1; i < tableServicos.rows.length; i++ ) {
+                if(tableServicos.rows[i].cells[0].innerHTML != " ") {
+                    arrayServico[i - 1] = tableServicos.rows[i].cells[0].innerHTML;
+                }
+
+                if(tableServicos.rows[i].cells[1].innerHTML != " ") {
+                    arrayServicoExc[i - 1] = tableServicos.rows[i].cells[1].innerHTML;
+                }
+            }
+
+            console.log(arrayServico);
+            console.log(arrayServicoExc);
+
+            var arrayOcupacao = [];
+            var arrayOcupacaoExc = [];
+
+            var tableOcupacoes = document.getElementById( "tblOcupacoes" );
+            for ( var i = 1; i < tableOcupacoes.rows.length; i++ ) {
+                if(tableOcupacoes.rows[i].cells[0].innerHTML != " ") {
+                    arrayOcupacao[i - 1] = tableOcupacoes.rows[i].cells[0].innerHTML;
+                }
+
+                if(tableOcupacoes.rows[i].cells[1].innerHTML != " ") {
+                    arrayOcupacaoExc[i - 1] = tableOcupacoes.rows[i].cells[1].innerHTML;
+                }
+            }
+
+            console.log(arrayOcupacao);
+            console.log(arrayOcupacaoExc);
+
+            var jsonText = '{' +
+                                '"codigoCNAE": "' + valueCodAtividade + '",' +
+                                '"resourceAtividade": "atividade_' + valueCodAtividade + '_' + valueClasseAtividade + '",' +
+                                '"descricao": "' + valueDescAtividade + '",' +
+                                '"classeAtividade": "' + valueClasseAtividade + '"' +
+                            '}';
+
+            console.log(jsonText);
+
+            var obj = JSON.parse(jsonText);
+
+            obj['locais'] = [];
+            obj['produtos'] = [];
+            obj['servicos'] = [];
+            obj['ocupacoes'] = [];
+
+            obj['locaisExc'] = [];
+            obj['produtosExc'] = [];
+            obj['servicosExc'] = [];
+            obj['ocupacoesExc'] = [];
+
+            var arrayPosition = 0;
+
+            for(var i = 0; i < arrayLocal.length; i++) {
+                if(arrayLocal[i] != null) {
+                    obj['locais'][arrayPosition] = arrayLocal[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayLocalExc.length; i++) {
+                if(arrayLocalExc[i] != null) {
+                    obj['locaisExc'][arrayPosition] = arrayLocalExc[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayProduto.length; i++) {
+                if(arrayProduto[i] != null) {
+                    obj['produtos'][arrayPosition] = arrayProduto[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayProdutoExc.length; i++) {
+                if(arrayProdutoExc[i] != null) {
+                    obj['produtosExc'][arrayPosition] = arrayProdutoExc[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayServico.length; i++) {
+                if(arrayServico[i] != null) {
+                    obj['servicos'][arrayPosition] = arrayServico[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayServicoExc.length; i++) {
+                if(arrayServicoExc[i] != null) {
+                    obj['servicosExc'][arrayPosition] = arrayServicoExc[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayOcupacao.length; i++) {
+                if(arrayOcupacao[i] != null) {
+                    obj['ocupacoes'][arrayPosition] = arrayOcupacao[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            arrayPosition = 0;
+
+            for(var i = 0; i < arrayOcupacaoExc.length; i++) {
+                if(arrayOcupacaoExc[i] != null) {
+                    obj['ocupacoesExc'][arrayPosition] = arrayOcupacaoExc[i];
+                    arrayPosition++;
+                } else {
+                    if(arrayPosition != 0) {
+                        arrayPosition--;
+                    }
+                }
+            }
+
+            console.log(obj);
+
+            var dataOrder = JSON.stringify(obj);
+
+            console.log(dataOrder);
+
+            const Url = 'http://localhost:8080/api/v1/atividades';
+
+            $.ajax({
+              url:Url,
+              type:"POST",
+              data: dataOrder,
+              contentType: "application/json",
+              dataType: "json",
+              success:function(result){
+                console.log('ok')
+              },
+              error:function(error){
+                console.log(error)
+              }
+            })
+
+        })
+
         function populateLists(jsonElements, nameList, nameListExc) {
 
           var listLocais = document.getElementById(nameList);
@@ -143,12 +375,21 @@
                 var newCell0  = newRow.insertCell(0);
                 var newText0  = document.createTextNode(" ");
                 newCell0.appendChild(newText0);
+
+                var newCell  = newRow.insertCell(cell);
+                var newText  = document.createTextNode(value);
+
+                newCell.appendChild(newText);
+            } else {
+                var newCell  = newRow.insertCell(cell);
+                var newText  = document.createTextNode(value);
+
+                newCell.appendChild(newText);
+
+                var newCell1  = newRow.insertCell(1);
+                var newText1  = document.createTextNode(" ");
+                newCell1.appendChild(newText1);
             }
-
-            var newCell  = newRow.insertCell(cell);
-            var newText  = document.createTextNode(value);
-
-            newCell.appendChild(newText);
         }
       })
     </script>
@@ -179,6 +420,9 @@
                     <div class="form-group">
                         <label>Descrição da atividade:</label>
                         <input type="text" class="form-control" name="descAtividade" id="descAtividade"> </div>
+                    <div class="form-group">
+                        <label>Classe da atividade:</label>
+                        <input type="text" class="form-control" id="classeAtividade"> </div>
                     <div class="py-0">
                         <div class="container">
                             <div class="row">
@@ -327,7 +571,7 @@
                                 </div>
                             </div>
                             <div class="btn-group my-1 justify-content-end w-100">
-                                <button type="submit" class="btn btn-primary mx-2" name="btnCadastrar" id="btnCadastrar">Cadastrar</button>
+                                <button type="button" class="btn btn-primary mx-2" name="btnCadastrar" id="btnCadastrar">Cadastrar</button>
                             </div>
                         </div>
                     </div>
@@ -337,6 +581,8 @@
     </div>
 </div>
 <a href="/CadastrarElemento.html" class="btn btn-primary mx-2">Cadastrar Elemento</a>
+<a href="/" class="btn btn-primary mx-2">Buscar Atividade</a>
+<a href="/CadastrarCNAE.html" class="btn btn-primary mx-2">Cadastrar CNAE</a>
 </body>
 
 </html>

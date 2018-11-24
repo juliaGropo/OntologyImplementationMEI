@@ -12,6 +12,29 @@
     <script type="text/javascript">
        $(document).ready(function(){
 
+        $('#btnBuscar').on('click', function(){
+            var termoBusca = document.getElementById('termosElemento');
+            console.log(termoBusca.value);
+
+            const Url = 'http://localhost:8080/api/v1/elementos/' + $('#btnElementos').text() + "/" + termoBusca.value;
+
+            $.ajax({
+              url:Url,
+              type:"GET",
+              success:function(result){
+                console.log(result)
+                formElemento(result)
+
+                $('input[type="button"]').click(function(e){
+                   $(this).closest('tr').remove()
+                })
+              },
+              error:function(error){
+                console.log(error)
+              }
+            })
+        });
+
         $('#btnAdicionar').on('click', function(){
             var descAdicional = document.getElementById('txtDescricaoAdicional');
             console.log(descAdicional.value);
@@ -28,7 +51,7 @@
             $('#btnElementos').text(tipoSelecionado);
         });
 
-        $('#btnCadastrar').on('click', function(){
+        $('#btnAlterar').on('click', function(){
 
             var tipoSelecionado = $('#btnElementos').text();
             var descOficial = document.getElementById('txtDescOficial');
@@ -92,6 +115,24 @@
             })
         })
 
+        $('#btnDeletar').on('click', function(){
+            var termoBusca = document.getElementById('termosElemento');
+            console.log(termoBusca.value);
+
+            const Url = 'http://localhost:8080/api/v1/elementos/' + termoBusca.value;
+
+            $.ajax({
+              url:Url,
+              type:"DELETE",
+              success:function(result){
+                console.log('ok')
+              },
+              error:function(error){
+                console.log(error)
+              }
+            })
+        })
+
         function populateTable(nameTable, value) {
             var table = document.getElementById(nameTable).getElementsByTagName('tbody')[0];
 
@@ -108,6 +149,16 @@
 
             var newCell1  = newRow.insertCell(1);
             newCell1.appendChild(btn);
+        }
+
+        function formElemento(jsonElements) {
+            var descOficial = document.getElementById('txtDescOficial');
+            descOficial.value = jsonElements.descricaoOficial;
+
+            for(var i = 0; i < jsonElements.descricoesAdicionais.length; i++) {
+                console.log(jsonElements.descricoesAdicionais[i]);
+                populateTable('tableDescricoes', jsonElements.descricoesAdicionais[i]);
+            }
         }
       })
     </script>
@@ -130,17 +181,33 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h3> Cadastro de elemento<br><br>
+                <h3> Edição de elemento<br><br>
                 </h3>
-                <div>
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btnElementos">Tipo de Elemento</button>
-                    <ul class="dropdown-menu" id = "tipoElemento">
-                        <li class="dropdown-item">Local</li>
-                        <li class="dropdown-item">Produto</li>
-                        <li class="dropdown-item">Serviço</li>
-                        <li class="dropdown-item">Ocupação</li>
-                    </ul>
-                    <br><br>
+                <div class="form-group">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <label>Busca:</label>
+                        </tr>
+                        <tr>
+                            <td >
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" id="btnElementos">Tipo de Elemento</button>
+                                <ul class="dropdown-menu" id = "tipoElemento">
+                                    <li class="dropdown-item">Local</li>
+                                    <li class="dropdown-item">Produto</li>
+                                    <li class="dropdown-item">Serviço</li>
+                                    <li class="dropdown-item">Ocupação</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="termosElemento">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary mx-2" id="btnBuscar">Buscar</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="form-group">
                     <label>Descrição oficial:</label>
@@ -164,9 +231,9 @@
         </table>
 
         <div class="btn-group my-1 justify-content-end w-100" >
-            <button type="submit" class="btn btn-primary mx-2" id="btnCadastrar">Cadastrar</button>
+            <button type="submit" class="btn btn-primary mx-2" id="btnAlterar">Alterar</button>
+            <button type="submit" class="btn-danger" id="btnDeletar">Excluir</button>
         </div>
     </div>
 </div>
-<a href="/EditarElemento.html" class="btn btn-primary mx-2">Editar Elemento</a>
 </body>
