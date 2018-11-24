@@ -398,6 +398,24 @@
           }
         }
 
+        $('#btnDeletar').on('click', function(){
+            var termoBusca = document.getElementById('termosAtividade');
+            console.log(termoBusca.value);
+
+            const Url = 'http://localhost:8080/api/v1/atividades/' + termoBusca.value;
+
+            $.ajax({
+              url:Url,
+              type:"DELETE",
+              success:function(result){
+                console.log('ok')
+              },
+              error:function(error){
+                console.log(error)
+              }
+            })
+        })
+
         function populateTable(nameTable, value, cell) {
             var table = document.getElementById(nameTable).getElementsByTagName('tbody')[0];
 
@@ -451,10 +469,25 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h3> Cadastro de Atividade<br><br>
+                <h3> Edição de Atividade<br><br>
                 </h3>
                 <form class="" action="/criarAtividade" method="post">
                     <div class="form-group">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <label>Busca:</label>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" id="termosAtividade">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary mx-2" id="btnBuscar">Buscar</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                         <label>Código da atividade:</label>
                         <input type="text" class="form-control" name="codAtividade" id="codAtividade"> </div>
                     <div class="form-group">
@@ -484,134 +517,135 @@
                                     <div class="row"> </div>
                                     <div class="tab-content mt-2">
                                         <div class="tab-pane fade show active" id="tabone" role="tabpanel">
-                                                <div class="form-group">
-                                                    <div class="col-md-12">
-                                                        <div class="input-group w-100">
-                                                            <div class="input-group-append w-100 py-1">
-                                                                <div class="btn-group my-1 w-50">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdLocais" id="dpdLocais"> Busque aqui os locais a serem inseridos na lista abaixo</button>
-                                                                    <ul class="dropdown-menu" id="itensLocais">
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="btn-group my-1 w-50 justify-content-end px-4">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdLocaisExc" id="dpdLocaisExc"> Busque aqui os locais a serem inseridos como exceção</button>
-                                                                    <ul class="dropdown-menu" id="itensLocaisExc">
-                                                                    </ul>
-                                                                </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group w-100">
+                                                        <div class="input-group-append w-100 py-1">
+                                                            <div class="btn-group my-1 w-50">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdLocais" id="dpdLocais"> Busque aqui os locais a serem inseridos na lista abaixo</button>
+                                                                <ul class="dropdown-menu" id="itensLocais">
+                                                                </ul>
+                                                            </div>
+                                                            <div class="btn-group my-1 w-50 justify-content-end px-4">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdLocaisExc" id="dpdLocaisExc"> Busque aqui os locais a serem inseridos como exceção</button>
+                                                                <ul class="dropdown-menu" id="itensLocaisExc">
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <table class="table" name="tblLocais" id="tblLocais">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Locais onde a atividade pode ser executada:</th>
-                                                            <th>Exceções (locais restritos a essa atividade):</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-                                                    </table>
                                                 </div>
+                                                <table class="table" name="tblLocais" id="tblLocais">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Locais onde a atividade pode ser executada:</th>
+                                                        <th>Exceções (locais restritos a essa atividade):</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="tabtwo" role="tabpanel">
-                                                <div class="form-group">
-                                                    <div class="col-md-12">
-                                                        <div class="input-group w-100">
-                                                            <div class="input-group-append w-100 py-1">
-                                                                <div class="btn-group my-1 w-50">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdProdutos" id="dpdProdutos"> Busque aqui os produtos a serem inseridos na lista abaixo</button>
-                                                                    <ul class="dropdown-menu" id="itensProdutos">
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="btn-group my-1 w-50 justify-content-end px-4">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdProdutosExc" id="dpdProdutosExc"> Busque aqui os produtos a serem inseridos como exceção</button>
-                                                                    <ul class="dropdown-menu" id="itensProdutosExc">
-                                                                    </ul>
-                                                                </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group w-100">
+                                                        <div class="input-group-append w-100 py-1">
+                                                            <div class="btn-group my-1 w-50">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdProdutos" id="dpdProdutos"> Busque aqui os produtos a serem inseridos na lista abaixo</button>
+                                                                <ul class="dropdown-menu" id="itensProdutos">
+                                                                </ul>
+                                                            </div>
+                                                            <div class="btn-group my-1 w-50 justify-content-end px-4">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdProdutosExc" id="dpdProdutosExc"> Busque aqui os produtos a serem inseridos como exceção</button>
+                                                                <ul class="dropdown-menu" id="itensProdutosExc">
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <table class="table" name="tblProdutos" id="tblProdutos">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Produtos que podem se originar da atividade:</th>
-                                                            <th>Exceções (produtos restritos a essa atividade):</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-                                                    </table>
                                                 </div>
+                                                <table class="table" name="tblProdutos" id="tblProdutos">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Produtos que podem se originar da atividade:</th>
+                                                        <th>Exceções (produtos restritos a essa atividade):</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="tabthree" role="tabpanel">
-                                                <div class="form-group">
-                                                    <div class="col-md-12">
-                                                        <div class="input-group w-100">
-                                                            <div class="input-group-append w-100 py-1">
-                                                                <div class="btn-group my-1 w-50">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdServicos" id="dpdServicos"> Busque aqui os serviços a serem inseridos na lista abaixo</button>
-                                                                    <ul class="dropdown-menu" id="itensServicos">
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="btn-group my-1 w-50 justify-content-end px-4">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdServicosExc" id="dpdServicosExc"> Busque aqui os serviços a serem inseridos como exceção</button>
-                                                                    <ul class="dropdown-menu" id="itensServicosExc">
-                                                                    </ul>
-                                                                </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group w-100">
+                                                        <div class="input-group-append w-100 py-1">
+                                                            <div class="btn-group my-1 w-50">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdServicos" id="dpdServicos"> Busque aqui os serviços a serem inseridos na lista abaixo</button>
+                                                                <ul class="dropdown-menu" id="itensServicos">
+                                                                </ul>
+                                                            </div>
+                                                            <div class="btn-group my-1 w-50 justify-content-end px-4">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdServicosExc" id="dpdServicosExc"> Busque aqui os serviços a serem inseridos como exceção</button>
+                                                                <ul class="dropdown-menu" id="itensServicosExc">
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <table class="table" name="tblServicos" id="tblServicos">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Serviços que podem se originar da atividade:</th>
-                                                            <th>Exceções (serviços restritos a essa atividade):</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-                                                    </table>
                                                 </div>
+                                                <table class="table" name="tblServicos" id="tblServicos">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Serviços que podem se originar da atividade:</th>
+                                                        <th>Exceções (serviços restritos a essa atividade):</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="tabfour" role="tabpanel">
-                                                <div class="form-group">
-                                                    <div class="col-md-12">
-                                                        <div class="input-group w-100">
-                                                            <div class="input-group-append w-100 py-1">
-                                                                <div class="btn-group my-1 w-50">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdOcupacoes" id="dpdOcupacoes"> Busque aqui as ocupações a serem inseridas na lista abaixo</button>
-                                                                    <ul class="dropdown-menu" id="itensOcupacoes">
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="btn-group my-1 w-50 justify-content-end px-4">
-                                                                    <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdOcupacoesExc" id="dpdOcupacoesExc"> Busque aqui as ocupações a serem inseridos como exceção</button>
-                                                                    <ul class="dropdown-menu" id="itensOcupacoesExc">
-                                                                    </ul>
-                                                                </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="input-group w-100">
+                                                        <div class="input-group-append w-100 py-1">
+                                                            <div class="btn-group my-1 w-50">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdOcupacoes" id="dpdOcupacoes"> Busque aqui as ocupações a serem inseridas na lista abaixo</button>
+                                                                <ul class="dropdown-menu" id="itensOcupacoes">
+                                                                </ul>
+                                                            </div>
+                                                            <div class="btn-group my-1 w-50 justify-content-end px-4">
+                                                                <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" name="dpdOcupacoesExc" id="dpdOcupacoesExc"> Busque aqui as ocupações a serem inseridos como exceção</button>
+                                                                <ul class="dropdown-menu" id="itensOcupacoesExc">
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <table class="table" name="tblOcupacoes" id="tblOcupacoes">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Ocupações que podem exercer esta atividade:</th>
-                                                            <th>Exceções (ocupações restritas a essa atividade):</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-                                                    </table>
                                                 </div>
+                                                <table class="table" name="tblOcupacoes" id="tblOcupacoes">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Ocupações que podem exercer esta atividade:</th>
+                                                        <th>Exceções (ocupações restritas a essa atividade):</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="btn-group my-1 justify-content-end w-100">
                                 <button type="button" class="btn btn-primary mx-2" name="btnCadastrar" id="btnCadastrar">Cadastrar</button>
+                                <button type="submit" class="btn-danger" id="btnDeletar">Excluir</button>
                             </div>
                         </div>
                     </div>

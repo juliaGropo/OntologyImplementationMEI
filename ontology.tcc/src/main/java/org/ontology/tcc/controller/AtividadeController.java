@@ -64,4 +64,14 @@ public class AtividadeController {
         return new ResponseEntity(atividadeResponse, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE)
+    public HttpStatus deletaAtividade(@PathVariable String codigo) throws FileNotFoundException {
+
+        OntModel ontology = ontologyService.carregaOntologia();
+
+        atividadeService.deleteAtividade(codigo, ontology);
+
+        return HttpStatus.OK;
+    }
+
 }

@@ -50,7 +50,7 @@ public class ElementoController {
     }
 
     @RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE)
-    public HttpStatus retornaElemento(@PathVariable String codigo) throws FileNotFoundException {
+    public HttpStatus deletaElemento(@PathVariable String codigo) throws FileNotFoundException {
 
         OntModel ontology = ontologyService.carregaOntologia();
 

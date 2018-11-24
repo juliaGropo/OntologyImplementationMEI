@@ -248,4 +248,20 @@ public class AtividadeService {
 
         return  HttpStatus.OK;
     }
+
+    public void deleteAtividade(String codAtividade, OntModel ontology) throws FileNotFoundException {
+
+        Individual verificaAtividade = ontology.getIndividual(MEIResource.ONTOLOGY + codAtividade);
+
+        if (verificaAtividade != null) {
+            verificaAtividade.remove();
+
+            ClassLoader classLoader = this.getClass().getClassLoader();
+            String file = classLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
+
+            PrintStream p = new PrintStream(file);
+            ontology.writeAll(p, "RDF/XML", null);
+            p.close();
+        }
+    }
 }
