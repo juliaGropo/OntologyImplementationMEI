@@ -3,6 +3,8 @@ package org.ontology.tcc.service;
 import org.apache.jena.ontology.*;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.ontology.tcc.entities.response.AtividadeResponse;
 import org.ontology.tcc.entities.response.InformacaoAtividadeResponse;
 import org.ontology.tcc.resources.MEIResource;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -154,6 +157,8 @@ public class AtividadeService {
 
         OntologyService ontologyService = new OntologyService();
 
+        deleteAtividade(atividade.getResourceAtividade(), ontology);
+
         OntClass atividadeClass = ontology.getOntClass(MEIResource.CLASS_ATIVIDADE);
         Individual atividadeIndividual = atividadeClass.createIndividual(MEIResource.ONTOLOGY + atividade.getResourceAtividade());
         DatatypeProperty propertyCod = ontology.getDatatypeProperty(MEIResource.PROP_ATIVIDADEDESCRICAO);
@@ -247,6 +252,95 @@ public class AtividadeService {
         p.close();
 
         return  HttpStatus.OK;
+    }
+
+    public AtividadeResponse retornaAtividade(AtividadeResponse atividadeResponse, OntModel ontology) {
+
+        OntologyService ontologyService = new OntologyService();
+
+        atividadeResponse.setCodigoCNAE(atividadeResponse.getResourceAtividade().split("_")[1]);
+
+        Individual atividadeIndividual = ontology.getIndividual(MEIResource.ONTOLOGY + atividadeResponse.getResourceAtividade());
+
+        StmtIterator it = atividadeIndividual.listProperties();
+
+        List<String> local = new ArrayList<>();
+        List<String> localExc = new ArrayList<>();
+        List<String> produto = new ArrayList<>();
+        List<String> produtoExc = new ArrayList<>();
+        List<String> servico = new ArrayList<>();
+        List<String> servicoExc = new ArrayList<>();
+        List<String> ocupacao = new ArrayList<>();
+        List<String> ocupacaoExc = new ArrayList<>();
+
+        while ( it.hasNext()) {
+            Statement s = (Statement) it.next();
+
+            if (s.getObject().isLiteral()) {
+
+                System.out.println(""+s.getLiteral().getLexicalForm().toString()+" type = "+s.getPredicate().getLocalName());
+
+                if (s.getPredicate().getLocalName().equals("atividadeDescricao"))
+                    atividadeResponse.setDescricao(s.getLiteral().getLexicalForm().toString());
+
+            } else {
+
+                if (s.getPredicate().getLocalName().equals("temLocal")
+                    || s.getPredicate().getLocalName().equals("temProduto")
+                    || s.getPredicate().getLocalName().equals("temServico")
+                    || s.getPredicate().getLocalName().equals("temOcupacao")
+                    ||s.getPredicate().getLocalName().equals("excetoLocal")
+                    || s.getPredicate().getLocalName().equals("excetoProduto")
+                    || s.getPredicate().getLocalName().equals("excetoServico")
+                    || s.getPredicate().getLocalName().equals("excetoOcupacao")) {
+
+                    System.out.println("" + s.getObject().toString().substring(66) + " type = " + s.getPredicate().getLocalName());
+
+                    if (s.getPredicate().getLocalName().equals("temLocal"))
+                        local.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("temProduto"))
+                        produto.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("temServico"))
+                        servico.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("temOcupacao"))
+                        ocupacao.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("excetoLocal"))
+                        localExc.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("excetoProduto"))
+                        produtoExc.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("excetoServico"))
+                        servicoExc.add(s.getObject().toString().substring(66));
+
+                    if (s.getPredicate().getLocalName().equals("excetoOcupacao"))
+                        ocupacao.add(s.getObject().toString().substring(66));
+                }
+
+                if (s.getPredicate().getLocalName().equals("permitidaPor"))
+                    atividadeResponse.setClasseAtividade(s.getObject().toString().substring(73));
+            }
+
+
+        }
+        System.out.println("\n");
+
+        atividadeResponse.setLocais(local);
+        atividadeResponse.setProdutos(produto);
+        atividadeResponse.setServicos(servico);
+        atividadeResponse.setOcupacoes(ocupacao);
+
+        atividadeResponse.setLocaisExc(localExc);
+        atividadeResponse.setProdutosExc(produtoExc);
+        atividadeResponse.setServicosExc(servicoExc);
+        atividadeResponse.setOcupacoesExc(ocupacaoExc);
+
+        return atividadeResponse;
+
     }
 
     public void deleteAtividade(String codAtividade, OntModel ontology) throws FileNotFoundException {

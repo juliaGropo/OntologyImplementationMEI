@@ -134,7 +134,30 @@
               }
             })
 
-        $('#btnCadastrar').on('click', function(){
+        $('#btnBuscar').on('click', function(){
+            var termoBusca = document.getElementById('termosAtividade');
+            console.log(termoBusca.value);
+
+            const Url = 'http://localhost:8080/api/v1/atividades/edicao/' + termoBusca.value;
+
+            $.ajax({
+              url:Url,
+              type:"GET",
+              success:function(result){
+                console.log(result)
+                formAtividade(result)
+
+                $('input[type="button"]').click(function(e){
+                   $(this).closest('tr').remove()
+                })
+              },
+              error:function(error){
+                console.log(error)
+              }
+            })
+        });
+
+        $('#btnAlterar').on('click', function(){
 
             var txtCodAtividade = document.getElementById('codAtividade');
             var txtDescAtividade = document.getElementById('descAtividade');
@@ -365,6 +388,57 @@
             })
 
         })
+
+        function formAtividade(jsonElements) {
+            var txtCodAtividade = document.getElementById('codAtividade');
+            txtCodAtividade.value = jsonElements.codigoCNAE;
+
+            var txtDescAtividade = document.getElementById('descAtividade');
+            txtDescAtividade.value = jsonElements.descricao;
+
+            var txtClasseAtividade = document.getElementById('classeAtividade');
+            txtClasseAtividade.value = jsonElements.classeAtividade;
+
+            for(var i = 0; i < jsonElements.locais.length; i++) {
+                console.log(jsonElements.locais[i]);
+                populateTable('tblLocais', jsonElements.locais[i], 0);
+            }
+
+            for(var i = 0; i < jsonElements.locaisExc.length; i++) {
+                console.log(jsonElements.locaisExc[i]);
+                populateTable('tblLocais', jsonElements.locaisExc[i], 1);
+            }
+
+            for(var i = 0; i < jsonElements.produtos.length; i++) {
+                console.log(jsonElements.produtos[i]);
+                populateTable('tblProdutos', jsonElements.produtos[i], 0);
+            }
+
+            for(var i = 0; i < jsonElements.produtosExc.length; i++) {
+                console.log(jsonElements.produtosExc[i]);
+                populateTable('tblProdutos', jsonElements.produtosExc[i], 1);
+            }
+
+            for(var i = 0; i < jsonElements.servicos.length; i++) {
+                console.log(jsonElements.servicos[i]);
+                populateTable('tblServicos', jsonElements.servicos[i], 0);
+            }
+
+            for(var i = 0; i < jsonElements.servicosExc.length; i++) {
+                console.log(jsonElements.servicosExc[i]);
+                populateTable('tblServicos', jsonElements.servicosExc[i], 1);
+            }
+
+            for(var i = 0; i < jsonElements.ocupacoes.length; i++) {
+                console.log(jsonElements.ocupacoes[i]);
+                populateTable('tblOcupacoes', jsonElements.ocupacoes[i], 0);
+            }
+
+            for(var i = 0; i < jsonElements.ocupacoesExc.length; i++) {
+                console.log(jsonElements.ocupacoesExc[i]);
+                populateTable('tblOcupacoes', jsonElements.ocupacoesExc[i], 1);
+            }
+        }
 
         function populateLists(jsonElements, nameList, nameListExc) {
 
@@ -644,8 +718,8 @@
                                 </div>
                             </div>
                             <div class="btn-group my-1 justify-content-end w-100">
-                                <button type="button" class="btn btn-primary mx-2" name="btnCadastrar" id="btnCadastrar">Cadastrar</button>
-                                <button type="submit" class="btn-danger" id="btnDeletar">Excluir</button>
+                                <button type="button" class="btn btn-primary mx-2" id="btnAlterar">Alterar</button>
+                                <button type="button" class="btn-danger" id="btnDeletar">Excluir</button>
                             </div>
                         </div>
                     </div>

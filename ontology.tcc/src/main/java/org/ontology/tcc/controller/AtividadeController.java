@@ -64,6 +64,19 @@ public class AtividadeController {
         return new ResponseEntity(atividadeResponse, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/edicao/{codigo}", method = RequestMethod.GET)
+    public ResponseEntity<AtividadeResponse> retornaAtividade(@PathVariable String codigo) {
+
+        OntModel ontology = ontologyService.carregaOntologia();
+
+        AtividadeResponse atividadeResponse = new AtividadeResponse();
+        atividadeResponse.setResourceAtividade(codigo);
+
+        atividadeResponse = atividadeService.retornaAtividade(atividadeResponse, ontology);
+
+        return new ResponseEntity<>(atividadeResponse, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE)
     public HttpStatus deletaAtividade(@PathVariable String codigo) throws FileNotFoundException {
 
