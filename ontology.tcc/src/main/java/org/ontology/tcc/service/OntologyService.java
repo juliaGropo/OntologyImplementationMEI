@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -140,5 +141,19 @@ public class OntologyService {
             if (destinationChannel != null && destinationChannel.isOpen())
                 destinationChannel.close();
         }
+    }
+
+    public List<File> listarVersoes() {
+
+        File folder = new File("C:\\Users\\Julia\\Documents\\OntologyImplementationMEI\\ontology.tcc\\target\\classes\\ontology_source\\versions");
+
+        List<File> files = new ArrayList<>();
+
+        for (final File fileEntry : folder.listFiles()) {
+            System.out.println(fileEntry.getName());
+            files.add(fileEntry);
+        }
+
+        return files;
     }
 }

@@ -12,56 +12,54 @@
 <script type="text/javascript">
       $(document).ready(function(){
 
-        const Url = 'http://localhost:8080/api/v1/atividades';
+        const Url = 'http://localhost:8080/api/v1/ontologia';
 
         $.ajax({
           url:Url,
           type:"GET",
           success:function(result){
             populateTable(result)
+
+            $('input[type="button"]').click(function(e){
+                var txt;
+                e.preventDefault();
+                txt = $(this).parent().prev().text();
+                alert(txt);
+                downloadFile(txt, 'owl');
+            })
           },
           error:function(error){
             console.log(error)
           }
         })
 
-        $('#btnBuscar').on('click', function(){
-            var termos = document.getElementById('termosAtividade').value;
-
-            const newUrl = 'http://localhost:8080/api/v1/atividades/' + termos;
-
-            $.ajax({
-              url:newUrl,
-              type:"GET",
-              success:function(result){
-                console.log(result['atividadesEncontradas'])
-                populateTable(result['atividadesEncontradas']);
-              },
-              error:function(error){
-                console.log(error)
-              }
-            })
-        })
-
         function populateTable(jsonElements) {
 
-          $("#tableAtividades tbody tr").remove();
+          $("#tableVersoes tbody tr").remove();
 
           for(var i = 0; i < jsonElements.length; i++) {
-            if(jsonElements[i].descricao != null) {
-              var table = document.getElementById('tableAtividades').getElementsByTagName('tbody')[0];
+              var table = document.getElementById('tableVersoes').getElementsByTagName('tbody')[0];
 
               var newRow   = table.insertRow(table.rows.length);
-              var newCell  = newRow.insertCell(0);
-              var newCell2  = newRow.insertCell(1);
+              var newCell2  = newRow.insertCell(0);
 
-              var newText  = document.createTextNode(jsonElements[i].codigoCNAE);
-              var newText2  = document.createTextNode(jsonElements[i].descricao);
+              var newText2  = document.createTextNode(jsonElements[i]);
               newCell.appendChild(newText);
-              newCell2.appendChild(newText2);
-            }
+
+              var link = document.createElement("a");
+              link.appendChild(newText2);
+              link.href = jsonElements[i];
+
+              newCell2.appendChild(link);
           }
         }
+
+        function downloadFile(data, type) {
+            var blob = new Blob([data], { type: type.toString() });
+            var url = window.URL.createObjectURL(blob);
+            window.open(url);
+        }
+
       })
    </script>
 </head>
@@ -75,8 +73,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="BuscarAtividades.html">Consultar Atividade <span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="BuscarAtividades.html">Consultar Atividade</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="CadastrarAtividade.html">Cadastrar Atividade</a>
@@ -93,39 +91,22 @@
             <li class="nav-item">
                 <a class="nav-link" href="CadastrarCNAE.html">Cadastrar CNAE</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="VisualizarVersoes.html">Visualizar Versões</span></a>
+            <li class="nav-item active">
+                <a class="nav-link" href="VisualizarVersoes.html">Visualizar Versões <span class="sr-only">(current)</span></a>
             </li>
         </ul>
     </div>
 </nav>
 <div class="py-5">
     <div class="container">
-        <h3> Consulta de atividades<br><br>
+        <h3> Visualização de versões<br><br>
         </h3>
-        <div class="form-group">
-            <table class="table">
-                <tbody>
-                <tr>
-                    <label>Busca:</label>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text" class="form-control" id="termosAtividade">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary mx-2" id="btnBuscar">Buscar</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
         <div class="py-0">
-            <table id="tableAtividades" class="table">
+            <table id="tableVersoes" class="table">
                 <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Arquivo</th>
                 </tr>
                 </thead>
                 <tbody>
