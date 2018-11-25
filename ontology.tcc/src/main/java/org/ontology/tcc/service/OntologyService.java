@@ -10,8 +10,8 @@ import org.ontology.tcc.resources.MEIResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -122,5 +122,23 @@ public class OntologyService {
 
         individualsToFilter.removeAll(resourcesWithExcecao);
         return individualsToFilter;
+    }
+
+    public static void copyFile(File source, File destination) throws IOException {
+        if (destination.exists())
+            destination.delete();
+        FileChannel sourceChannel = null;
+        FileChannel destinationChannel = null;
+        try {
+            sourceChannel = new FileInputStream(source).getChannel();
+            destinationChannel = new FileOutputStream(destination).getChannel();
+            sourceChannel.transferTo(0, sourceChannel.size(),
+                    destinationChannel);
+        } finally {
+            if (sourceChannel != null && sourceChannel.isOpen())
+                sourceChannel.close();
+            if (destinationChannel != null && destinationChannel.isOpen())
+                destinationChannel.close();
+        }
     }
 }

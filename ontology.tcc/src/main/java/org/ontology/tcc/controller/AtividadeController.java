@@ -43,7 +43,7 @@ public class AtividadeController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public HttpStatus cadastrarElemento(@RequestBody AtividadeResponse atividade) throws FileNotFoundException {
+    public HttpStatus cadastrarElemento(@RequestBody AtividadeResponse atividade) throws IOException {
 
         OntModel ontology = ontologyService.carregaOntologia();
 
@@ -78,7 +78,7 @@ public class AtividadeController {
     }
 
     @RequestMapping(value = "/{codigo}", method = RequestMethod.DELETE)
-    public HttpStatus deletaAtividade(@PathVariable String codigo) throws FileNotFoundException {
+    public HttpStatus deletaAtividade(@PathVariable String codigo) throws IOException {
 
         OntModel ontology = ontologyService.carregaOntologia();
 

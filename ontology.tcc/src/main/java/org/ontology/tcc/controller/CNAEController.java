@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/v1/cnae")
@@ -27,7 +28,7 @@ public class CNAEController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<CNAE> cadastrarCNAE(@RequestBody CNAE cnae) throws FileNotFoundException {
+    public ResponseEntity<CNAE> cadastrarCNAE(@RequestBody CNAE cnae) throws IOException {
 
         OntModel ontology = ontologyService.carregaOntologia();
 

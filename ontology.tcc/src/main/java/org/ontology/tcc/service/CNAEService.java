@@ -5,13 +5,32 @@ import org.ontology.tcc.entities.response.CNAE;
 import org.ontology.tcc.resources.MEIResource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Service
 public class CNAEService {
 
-    public CNAE cadastrarCNAE(CNAE cnae, OntModel ontology) throws FileNotFoundException {
+    public CNAE cadastrarCNAE(CNAE cnae, OntModel ontology) throws IOException {
+
+        ClassLoader classLoaderRemove = this.getClass().getClassLoader();
+        String fileRemove = classLoaderRemove.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
+
+        SimpleDateFormat formatoData = new SimpleDateFormat("yyyyMMdd");
+        Calendar data = Calendar.getInstance();
+
+        File arquivoAntigo = new File(classLoaderRemove.getResource("ontology_source/tcc_mei_v2.0.owl").getFile());
+        File arquivoNovo = new File("C:\\Users\\Julia\\Documents\\OntologyImplementationMEI\\ontology.tcc\\target\\classes\\ontology_source\\versions\\tcc_mei_v2.0" + formatoData.format(data.getTime()) + ".owl");
+
+        PrintStream pRemove = new PrintStream(fileRemove);
+        ontology.writeAll(pRemove, "RDF/XML", null);
+        pRemove.close();
+
+        OntologyService.copyFile(arquivoAntigo, arquivoNovo);
 
         String classeElemento = MEIResource.CLASS_CONJUNTOCNAE;
         String id = MEIResource.PROP_CONJUNTOCODIGO;

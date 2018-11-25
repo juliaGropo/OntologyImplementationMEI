@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/v1/elementos")
@@ -41,7 +42,7 @@ public class ElementoController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public HttpStatus cadastrarElemento(@RequestBody Elemento elemento) throws FileNotFoundException {
+    public HttpStatus cadastrarElemento(@RequestBody Elemento elemento) throws IOException {
         OntModel ontology = ontologyService.carregaOntologia();
 
         elementoService.createElemento(elemento, ontology);

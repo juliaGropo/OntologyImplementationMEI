@@ -7,15 +7,19 @@ import org.ontology.tcc.entities.response.Elemento;
 import org.ontology.tcc.resources.MEIResource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
 public class ElementoService {
 
-    public void createElemento(Elemento elemento, OntModel ontology) throws FileNotFoundException {
+    public void createElemento(Elemento elemento, OntModel ontology) throws IOException {
 
         String classeElemento = "";
         String property = MEIResource.PROP_ATIVIDADEELEMENTODESCRICAO;
@@ -43,15 +47,31 @@ public class ElementoService {
 
         Individual verificaElemento = ontology.getIndividual(MEIResource.ONTOLOGY + elemento.getResourceCode());
 
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        String file = classLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
+
+        SimpleDateFormat formatoData = new SimpleDateFormat("yyyyMMdd");
+        Calendar data = Calendar.getInstance();
+
+        File arquivoAntigo = new File(classLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile());
+        File arquivoNovo = new File("C:\\Users\\Julia\\Documents\\OntologyImplementationMEI\\ontology.tcc\\target\\classes\\ontology_source\\versions\\tcc_mei_v2.0" + formatoData.format(data.getTime()) + ".owl");
+
+        PrintStream p = new PrintStream(file);
+        ontology.writeAll(p, "RDF/XML", null);
+        p.close();
+
+        OntologyService.copyFile(arquivoAntigo, arquivoNovo);
+
         if (verificaElemento != null) {
+
             verificaElemento.remove();
 
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            String file = classLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
+            ClassLoader classLoaderRemove = this.getClass().getClassLoader();
+            String fileRemove = classLoaderRemove.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
 
-            PrintStream p = new PrintStream(file);
-            ontology.writeAll(p, "RDF/XML", null);
-            p.close();
+            PrintStream pRemove = new PrintStream(fileRemove);
+            ontology.writeAll(pRemove, "RDF/XML", null);
+            pRemove.close();
         }
 
         DatatypeProperty propertyDesc = ontology.getDatatypeProperty(property);
@@ -69,12 +89,12 @@ public class ElementoService {
 
         ontology.add(elementoIndividual, generico, genericoIndividual);
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        String file = classLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
+        ClassLoader newClassLoader = this.getClass().getClassLoader();
+        String newFile = newClassLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
 
-        PrintStream p = new PrintStream(file);
-        ontology.writeAll(p, "RDF/XML", null);
-        p.close();
+        PrintStream newP = new PrintStream(newFile);
+        ontology.writeAll(newP, "RDF/XML", null);
+        newP.close();
     }
 
     public Elemento retornaElemento(Elemento elemento, OntModel ontology) {
@@ -114,9 +134,24 @@ public class ElementoService {
 
     }
 
-    public void deleteElemento(String codElemento, OntModel ontology) throws FileNotFoundException {
+    public void deleteElemento(String codElemento, OntModel ontology) throws IOException {
 
         Individual verificaElemento = ontology.getIndividual(MEIResource.ONTOLOGY + codElemento);
+
+        ClassLoader classLoaderRemove = this.getClass().getClassLoader();
+        String fileRemove = classLoaderRemove.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();
+
+        SimpleDateFormat formatoData = new SimpleDateFormat("yyyyMMdd");
+        Calendar data = Calendar.getInstance();
+
+        File arquivoAntigo = new File(classLoaderRemove.getResource("ontology_source/tcc_mei_v2.0.owl").getFile());
+        File arquivoNovo = new File("C:\\Users\\Julia\\Documents\\OntologyImplementationMEI\\ontology.tcc\\target\\classes\\ontology_source\\versions\\tcc_mei_v2.0" + formatoData.format(data.getTime()) + ".owl");
+
+        PrintStream pRemove = new PrintStream(fileRemove);
+        ontology.writeAll(pRemove, "RDF/XML", null);
+        pRemove.close();
+
+        OntologyService.copyFile(arquivoAntigo, arquivoNovo);
 
         if (verificaElemento != null) {
             verificaElemento.remove();
