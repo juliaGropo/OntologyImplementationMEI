@@ -1,0 +1,106 @@
+<html lang="pt-br">
+<head>
+    <!DOCTYPE html>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+      Seu Google client ID
+      Esse client ID foi criado no passo anterior
+    -->
+    <meta name="google-signin-client_id" content="451444040742-c3fcg91cntg4hvkbd01krmirf2ii3k1m.apps.googleusercontent.com">
+
+    <title>Google authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="theme.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        /**
+        Renderiza o botão de login na tela
+        */
+        function renderButton() {
+        gapi.signin2.render('meu-botao', {
+            'scope': 'email profile https://www.googleapis.com/auth/plus.login', // solicitando acesso ao profile e ao e-mail do usuário
+            'width': 250,
+            'height': 50,
+            'longtitle': true,
+            'theme': 'dark',
+            'onsuccess': onSuccess,
+            'onfailure': onFailure
+        });
+        }
+
+        /**
+        Função executada quando o login é efetuado com sucesso
+        */
+        function onSuccess(googleUser) {
+        // Recuperando o profile do usuário
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log("Name: " + profile.getName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+            window.location.replace("http://localhost:8080/BuscarAtividades.html");
+
+        // Recuperando o token do usuario. Essa informação você necessita passar para seu backend
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+        }
+
+        /**
+        Função executada quando ocorrer falha no logn
+        */
+        function onFailure(error) {
+        console.log(error);
+        }
+
+        /**
+        Função de deslogar o usuário
+        */
+        function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-primary navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">HelpMEI</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar2SupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+<br><br>
+<div class="container body-content">
+    <div class="box-login">
+        <h3>Login</h3>
+        <br>
+
+        <!-- html do botão -->
+        <div id="meu-botao"></div>
+
+        <hr/>
+        <a href="javascript:void(0);" onclick="signOut();">Sign out</a>
+    </div>
+    <hr />
+    <footer>
+        <p>&copy; HelpMEI</p>
+    </footer>
+</div>
+
+<script src="scripts/example1.js"></script>
+
+<!--Google Platform Library-->
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+
+<!--JQuery e Bootstrap - Não são obrigatórios para ao autenticação -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
