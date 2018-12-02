@@ -21,6 +21,8 @@ public class ElementoService {
 
     public void createElemento(Elemento elemento, OntModel ontology) throws IOException {
 
+        Individual verificaElemento = ontology.getIndividual(MEIResource.ONTOLOGY + elemento.getResourceCode());
+
         String classeElemento = "";
         String property = MEIResource.PROP_ATIVIDADEELEMENTODESCRICAO;
 
@@ -44,8 +46,6 @@ public class ElementoService {
         OntClass elementoClass = ontology.getOntClass(classeElemento);
 
         Individual elementoIndividual = elementoClass.createIndividual(MEIResource.ONTOLOGY + elemento.getResourceCode());
-
-        Individual verificaElemento = ontology.getIndividual(MEIResource.ONTOLOGY + elemento.getResourceCode());
 
         ClassLoader classLoader = this.getClass().getClassLoader();
         String file = classLoader.getResource("ontology_source/tcc_mei_v2.0.owl").getFile();

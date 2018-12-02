@@ -41,16 +41,20 @@
               var table = document.getElementById('tableVersoes').getElementsByTagName('tbody')[0];
 
               var newRow   = table.insertRow(table.rows.length);
-              var newCell2  = newRow.insertCell(0);
+              var newCell0  = newRow.insertCell(0);
+              var newText0  = document.createTextNode("bla bla");
+              newCell0.appendChild(newText0);
+
+              var newCell  = newRow.insertCell(1);
 
               var newText2  = document.createTextNode(jsonElements[i]);
-              newCell.appendChild(newText);
+              newCell.appendChild(newText2);
 
               var link = document.createElement("a");
               link.appendChild(newText2);
               link.href = jsonElements[i];
 
-              newCell2.appendChild(link);
+              newCell.appendChild(link);
           }
         }
 

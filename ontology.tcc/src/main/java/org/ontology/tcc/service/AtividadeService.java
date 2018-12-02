@@ -340,7 +340,7 @@ public class AtividadeService {
                 }
 
                 if (s.getPredicate().getLocalName().equals("permitidaPor"))
-                    atividadeResponse.setClasseAtividade(s.getObject().toString().substring(73));
+                    atividadeResponse.setClasseAtividade(s.getObject().toString().substring(72));
             }
 
 
